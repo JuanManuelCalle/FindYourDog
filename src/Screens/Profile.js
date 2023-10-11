@@ -1,33 +1,125 @@
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native'
+import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Entypo } from '@expo/vector-icons'; 
 import { FontAwesome } from '@expo/vector-icons'; 
 import { colors } from '../theme/colors';
 import HeaderComponente from '../components/HeaderComponent/HeaderComponente';
+import * as ImagePicker from 'expo-image-picker';
+import * as Location from 'expo-location';
+import { useGetImageQuery, usePutImageMutation } from '../services/FindDogAPi';
+import { useNavigation } from '@react-navigation/native';
+import { AntDesign } from '@expo/vector-icons'; 
+import { useDispatch } from 'react-redux';
+import { clearUser } from '../redux/authSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Profile = () => {
+  const navigation = useNavigation();
+  const [putImage, result] = usePutImageMutation();
+  const [location, setLocation] = useState(null);
+  const dispatch = useDispatch();
+
   const name = "MAX"
+
+  const {data, isLoading, error, refetch } = useGetImageQuery()
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4,4],
+      quality: 1,
+      base64: true
+    });
+
+    if(!result.canceled){
+      await  putImage({
+        image: `data:image/jpeg;base64,${result.assets[0].base64}`
+      });
+      refetch()
+    }
+  }
+
+  const openCamera = async () => {
+    const permission = await ImagePicker.requestCameraPermissionsAsync();
+
+    if(permission.granted === false){
+      alert('No haz concedido los permisos necesarios');
+      return
+    }else{
+      const result = await ImagePicker.launchCameraAsync({
+        base64: true
+      })
+
+      if(!result.canceled)
+        await putImage({
+          image: `data:image/jpeg;base64,${result.assets[0].base64}`,
+        });
+        refetch();
+    }
+  }
+
+  const getCoords = async () => {
+    let {status} = await Location.requestForegroundPermissionsAsync();
+    if(status !== "granted"){
+      alert('Permiso no concedido');
+      return;
+    }
+
+    let location = await Location.getCurrentPositionAsync({});
+    setLocation(location);
+    navigation.navigate("map", {location: location})
+  }
+
+  const handleLogout = async () => {
+    try{
+      dispatch(clearUser());
+      await AsyncStorage.removeItem("userEmail");
+      navigation.navigate("auth");
+    }catch (error) {
+      console.log(error);
+    }
+  }
+
+  const onLogout = () => {
+    Alert.alert('Cerrar sesion', 'Realmente desea cerrar la sesion?',[
+      {
+        text: 'No',
+        style: 'cancel'
+      },
+      {
+        text: 'Si',
+        onPress: () => handleLogout()
+      }
+    ])
+  }
+
+  const defaultImage = "https://www.hindustantimes.com/ht-img/img/2023/08/25/1600x900/international_dog_day_1692974397743_1692974414085.jpg"
+
   return (
     <>
       <HeaderComponente title={"Perfil"}/>
     <SafeAreaView>
       <View style={{alignItems: 'center', marginTop: 20}}>
         <Image style={styles.image} source={{
-          uri: "https://www.hindustantimes.com/ht-img/img/2023/08/25/1600x900/international_dog_day_1692974397743_1692974414085.jpg"
+          uri: data ? data.image : defaultImage
         }} />
         <View>
           <Text style={{fontSize: 30}}>{name}</Text>
         </View>
         <View>
-          <Pressable style={styles.btn} onPress={() => alert('Abrir camera')}>
+          <Pressable style={styles.btn} onPress={() => openCamera()}>
             <Text style={styles.textoBTN}><Entypo name="camera" size={24} color="white" /> Abrir camara</Text>
           </Pressable>
-          <Pressable onPress={() => alert('Abrir Galeria')} style={styles.btn}>
-            <Text style={styles.textoBTN}><FontAwesome name="file-photo-o" size={24} color="white" /> Abrir camara</Text>
+          <Pressable onPress={() => pickImage()} style={styles.btn}>
+            <Text style={styles.textoBTN}><FontAwesome name="file-photo-o" size={24} color="white" /> Abrir Galeria</Text>
           </Pressable>
-          <Pressable style={styles.btn} onPress={() => alert('Abrir Mapa')}>
+          <Pressable style={styles.btn} onPress={() => getCoords()}>
             <Text style={styles.textoBTN}><FontAwesome name="map-marker" size={24} color="white" /> Abrir mapa</Text>
+          </Pressable>
+          <Pressable style={styles.btn} onPress={() => onLogout()}>
+            <Text style={styles.textoBTN}><AntDesign name="logout" size={24} color="white" /> Cerrar sesion</Text>
           </Pressable>
       </View>
       </View>

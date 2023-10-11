@@ -4,10 +4,27 @@ import { Card, Button } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FontAwesome } from '@expo/vector-icons'; 
 import { colors } from '../theme/colors';
+import * as Location from 'expo-location';
+import { useState } from 'react';
 
 
 const DogDetail = ({ route }) => {
+  
     const { navigation,card } = route.params;
+    const [location, setLocation] = useState(null);
+
+    const getCoords = async () => {
+      let {status} = await Location.requestForegroundPermissionsAsync();
+      if(status !== "granted"){
+        alert('Permiso no concedido');
+        return;
+      }
+  
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+      navigation.navigate("map", {location: location})
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <Pressable onPress={() => {navigation.goBack()}}>
@@ -26,7 +43,7 @@ const DogDetail = ({ route }) => {
             <Text style={styles.textLastView}>Ultima vez vista: <Text style={styles.fontWeight}>{card.site}</Text></Text>
           </Card.Content>
           <Card.Actions style={styles.actions}>
-            <Button icon="paw" mode="contained" style={styles.btn} onPress={() => {}}>
+            <Button icon="paw" mode="contained" style={styles.btn} onPress={() => getCoords()}>
               Compartir ubicacion
             </Button>
           </Card.Actions>

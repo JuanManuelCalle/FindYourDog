@@ -1,0 +1,1 @@
+export const base_url = "https://finddog-87ba8-default-rtdb.firebaseio.com/";

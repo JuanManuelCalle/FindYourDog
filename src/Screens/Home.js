@@ -4,26 +4,26 @@ import { Searchbar, Card, Title, Paragraph } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import CardComponent from '../components/Card/Card';
-import { selectFilteredDogs, setSearchQuery  } from '../redux/homeSlice';
 import HeaderComponente from '../components/HeaderComponent/HeaderComponente';
 import { useNavigation } from '@react-navigation/native';
 import { colors } from '../theme/colors';
+import { useGetDogsQuery } from '../services/FindDogAPi';
 
 const Home = () => {
   const navigation = useNavigation();
 
   const [searchQuery, setSearchQueryLocal] = useState('');
 
-  const filteredDogs = useSelector(selectFilteredDogs);
-  
-  const dispatch = useDispatch();
-
-  const dogs  = useSelector((state) => state.homeSlice.allDogs);
+  // Obtener datos de Firebase usando useGetDogsQuery
+  const { data, isLoading, isError } = useGetDogsQuery();
 
   const onChangeSearch = (query) => {
     setSearchQueryLocal(query);
-    dispatch(setSearchQuery(query));
   };
+  
+  const filteredDogs = data ? data.filter((dog) =>
+        dog.name.toLowerCase().includes(searchQuery.toLowerCase())
+      ) : [];
 
   return (
     <>
@@ -36,9 +36,9 @@ const Home = () => {
           style={styles.searchbar}
         />
         <ScrollView>
-        {(searchQuery === '' ? dogs : filteredDogs).map((card, index) => (
-          <CardComponent key={card.id} card={card} />
-        ))}
+          {filteredDogs.map((card, index) => (
+            <CardComponent key={card.id} card={card} />
+          ))}
         </ScrollView>
       </SafeAreaView>
     </>
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   },
   searchbar: {
     marginBottom: 16,
-    backgroundColor: colors.white
+    backgroundColor: colors.white,
   },
 });
 

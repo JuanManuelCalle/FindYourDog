@@ -9,6 +9,8 @@ import ReporterDog from '../Screens/ReporterDog';
 import { colors } from '../theme/colors';
 import RootNavigation from './RootNavigation';
 import DogDetail from '../Screens/DogDetail';
+import ProfileNav from './ProfileNav';
+import MapaLoc from '../Screens/MapaLoc';
 
 
 const TabNav = () => {
@@ -25,10 +27,11 @@ const TabNav = () => {
 
         
         <Tab.Screen options={{tabBarIcon: ({focused}) => <FontAwesome name="user-circle" size={26} color={focused ? colors.rosadoFuerte : "black"} /> }} 
-        name='profile' component={Profile}
+        name='profile' component={ProfileNav}
         />
 
         <Tab.Screen name='dogdetail' component={DogDetail} options={{tabBarButton: () => null}} />
+        <Tab.Screen name='map' component={MapaLoc} options={{tabBarButton: () => null}} />
     </Tab.Navigator>
   )
 }
