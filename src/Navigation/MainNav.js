@@ -1,3 +1,7 @@
+/**
+ * Archivo para crear rutas de la app en donde validamos de que usuario este logueado para mostrar la pagina principal o mostrar el login
+ */
+
 import { NavigationContainer } from "@react-navigation/native";
 import React from "react";
 

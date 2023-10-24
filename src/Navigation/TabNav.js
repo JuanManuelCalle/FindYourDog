@@ -1,3 +1,7 @@
+/**
+ * Archivo para crear el menu de navbar en donded se muestran los iconos que retornan vistas de la aplicacion
+ */
+
 import { Text, View } from 'react-native'
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
@@ -17,6 +21,7 @@ const TabNav = () => {
     const Tab = createBottomTabNavigator();
   return (
     <Tab.Navigator screenOptions={{headerShown: false, title: ""}}>
+        {/* con color se hace que si esta activo mostramos el color rasofuerte y si no esta activo mostramos el color black  */}
         <Tab.Screen options={{tabBarIcon: ({focused}) => <AntDesign name="home" size={26} color={focused ? colors.rosadoFuerte : "black"} /> }} 
         name='Home' component={Home}
         />

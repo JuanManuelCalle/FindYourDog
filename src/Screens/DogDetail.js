@@ -1,28 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
 import { Card, Button } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FontAwesome } from '@expo/vector-icons'; 
 import { colors } from '../theme/colors';
 import * as Location from 'expo-location';
-import { useState } from 'react';
 
-
+/**
+ * Componente para mostrar detalles de un perro perdido y permitir compartir ubicación.
+ * @param {Object} route - La ruta que contiene la información del perro perdido y navegación.
+ * @returns {JSX.Element} - Elemento de React que representa la pantalla de detalles del perro.
+ */
 const DogDetail = ({ route }) => {
   
-    const { navigation,card } = route.params;
+    const { navigation, card } = route.params;
     const [location, setLocation] = useState(null);
 
+    /**
+     * Función para obtener las coordenadas de la ubicación actual y navegar a la vista del mapa.
+     */
     const getCoords = async () => {
-      let {status} = await Location.requestForegroundPermissionsAsync();
-      if(status !== "granted"){
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
         alert('Permiso no concedido');
         return;
       }
   
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
-      navigation.navigate("map", {location: location})
+      navigation.navigate("map", { location: location });
     }
 
     return (
@@ -44,16 +50,15 @@ const DogDetail = ({ route }) => {
           </Card.Content>
           <Card.Actions style={styles.actions}>
             <Button icon="paw" mode="contained" style={styles.btn} onPress={() => getCoords()}>
-              Compartir ubicacion
+              Compartir ubicación
             </Button>
           </Card.Actions>
         </Card>
       </SafeAreaView>
     );
-  };
-  
+};
 
-  const styles = StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
       flex: 1,
       padding: 16,
@@ -93,7 +98,6 @@ const DogDetail = ({ route }) => {
     btn:{
         backgroundColor: colors.rose
     }
-  });
-  
-  export default DogDetail;
-  
+});
+
+export default DogDetail;

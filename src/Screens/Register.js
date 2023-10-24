@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, Image } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, Image } from 'react-native';
+import React from 'react';
 import { TextInput, Button } from 'react-native-paper';
 import { useState } from 'react';
 import { colors } from '../theme/colors';
@@ -8,11 +8,16 @@ import { useNavigation } from '@react-navigation/native';
 import { firebase_auth } from '../firebase/firebaseAuth';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 
-const Login = () => {
+/**
+ * Componente de registro que permite a los usuarios crear una cuenta proporcionando su correo electrónico y contraseña.
+ * @returns {JSX.Element} - Elemento de React que representa la pantalla de registro.
+ */
+const Register = () => {
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('')
 
+    // Función que maneja el registro de usuarios.
     const handleRegister = async () => {
       try {
         const response = await createUserWithEmailAndPassword(
@@ -50,14 +55,13 @@ const Login = () => {
             style={styles.input}
             activeUnderlineColor={colors.AzulFuerte}
           />
-          <View><Text onPress={() => {navigation.navigate("login")}}>Tienes cuenta? <Text style={{fontWeight: 'bold'}}>Iniciar Sesion</Text></Text></View>
+          <View><Text onPress={() => {navigation.navigate("login")}}>¿Tienes una cuenta? <Text style={{fontWeight: 'bold'}}>Iniciar Sesión</Text></Text></View>
           <Button mode="contained" onPress={handleRegister} style={styles.button}>
             Registrarme
           </Button>
         </View>
     );
 };
-export default Login
 
 const styles = StyleSheet.create({
     container: {
@@ -87,4 +91,5 @@ const styles = StyleSheet.create({
       alignItems: 'center'
     }
   });
-  
+
+export default Register;

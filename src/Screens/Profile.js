@@ -1,6 +1,6 @@
-import { Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native'
-import React, { useState } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Entypo } from '@expo/vector-icons'; 
 import { FontAwesome } from '@expo/vector-icons'; 
 import { colors } from '../theme/colors';
@@ -14,6 +14,10 @@ import { useDispatch } from 'react-redux';
 import { clearUser } from '../redux/authSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+/**
+ * Componente de perfil que permite a los usuarios ver su imagen de perfil, cambiarla, abrir la cámara, abrir la galería, ver su ubicación en el mapa y cerrar sesión.
+ * @returns {JSX.Element} - Elemento de React que representa la pantalla de perfil.
+ */
 const Profile = () => {
   const navigation = useNavigation();
   const [putImage, result] = usePutImageMutation();
@@ -24,6 +28,7 @@ const Profile = () => {
 
   const {data, isLoading, error, refetch } = useGetImageQuery()
 
+  // Abre la galería para seleccionar una imagen.
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -41,13 +46,14 @@ const Profile = () => {
     }
   }
 
+  // Abre la cámara para tomar una foto.
   const openCamera = async () => {
     const permission = await ImagePicker.requestCameraPermissionsAsync();
 
     if(permission.granted === false){
-      alert('No haz concedido los permisos necesarios');
+      alert('No has concedido los permisos necesarios');
       return
-    }else{
+    } else {
       const result = await ImagePicker.launchCameraAsync({
         base64: true
       })
@@ -56,10 +62,11 @@ const Profile = () => {
         await putImage({
           image: `data:image/jpeg;base64,${result.assets[0].base64}`,
         });
-        refetch();
+      refetch();
     }
   }
 
+  // Obtiene la ubicación actual y la muestra en el mapa.
   const getCoords = async () => {
     let {status} = await Location.requestForegroundPermissionsAsync();
     if(status !== "granted"){
@@ -72,24 +79,26 @@ const Profile = () => {
     navigation.navigate("map", {location: location})
   }
 
+  // Maneja el cierre de sesión.
   const handleLogout = async () => {
-    try{
+    try {
       dispatch(clearUser());
       await AsyncStorage.removeItem("userEmail");
       navigation.navigate("auth");
-    }catch (error) {
+    } catch (error) {
       console.log(error);
     }
   }
 
+  // Muestra un cuadro de diálogo de confirmación antes de cerrar la sesión.
   const onLogout = () => {
-    Alert.alert('Cerrar sesion', 'Realmente desea cerrar la sesion?',[
+    Alert.alert('Cerrar sesión', '¿Realmente desea cerrar la sesión?',[
       {
         text: 'No',
         style: 'cancel'
       },
       {
-        text: 'Si',
+        text: 'Sí',
         onPress: () => handleLogout()
       }
     ])
@@ -110,16 +119,16 @@ const Profile = () => {
         </View>
         <View>
           <Pressable style={styles.btn} onPress={() => openCamera()}>
-            <Text style={styles.textoBTN}><Entypo name="camera" size={24} color="white" /> Abrir camara</Text>
+            <Text style={styles.textoBTN}><Entypo name="camera" size={24} color="white" /> Abrir cámara</Text>
           </Pressable>
           <Pressable onPress={() => pickImage()} style={styles.btn}>
-            <Text style={styles.textoBTN}><FontAwesome name="file-photo-o" size={24} color="white" /> Abrir Galeria</Text>
+            <Text style={styles.textoBTN}><FontAwesome name="file-photo-o" size={24} color="white" /> Abrir Galería</Text>
           </Pressable>
           <Pressable style={styles.btn} onPress={() => getCoords()}>
             <Text style={styles.textoBTN}><FontAwesome name="map-marker" size={24} color="white" /> Abrir mapa</Text>
           </Pressable>
           <Pressable style={styles.btn} onPress={() => onLogout()}>
-            <Text style={styles.textoBTN}><AntDesign name="logout" size={24} color="white" /> Cerrar sesion</Text>
+            <Text style={styles.textoBTN}><AntDesign name="logout" size={24} color="white" /> Cerrar sesión</Text>
           </Pressable>
       </View>
       </View>
@@ -127,8 +136,6 @@ const Profile = () => {
     </>
   )
 }
-
-export default Profile
 
 const styles = StyleSheet.create({
   image: {
@@ -143,7 +150,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.rose,
     borderRadius: 10,
-    alignContent: 'center',
+    alignItems: 'center',
     justifyContent: 'center',
     paddingLeft: 20,
     backgroundColor: colors.rose,
@@ -154,3 +161,5 @@ const styles = StyleSheet.create({
     color: colors.white
   }
 })
+
+export default Profile;

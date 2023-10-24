@@ -5,14 +5,18 @@ import MapView, { Marker } from 'react-native-maps';
 import HeaderComponente from '../components/HeaderComponent/HeaderComponente';
 import { useGetImageQuery } from '../services/FindDogAPi';
 
+/**
+ * Componente que muestra un mapa con una ubicación marcada y una imagen de la ubicación.
+ * @param {Object} route - Objeto de ruta que contiene la ubicación.
+ * @returns {JSX.Element} - Elemento de React que representa la pantalla del mapa.
+ */
 const MapaLoc = ({ route }) => {
 
   const { location } = route.params;
 
-  console.log(JSON.stringify(location, null, " "));
-
   const { data, isLoading, error, refetch } = useGetImageQuery();
 
+  // Imagen predeterminada en caso de que no se pueda cargar una imagen específica.
   const defaultImage = "https://www.hindustantimes.com/ht-img/img/2023/08/25/1600x900/international_dog_day_1692974397743_1692974414085.jpg"
 
   return (
@@ -31,7 +35,7 @@ const MapaLoc = ({ route }) => {
           <Marker
             coordinate={{
               latitude: location.coords.latitude,
-              longitude: location.coords.longitude ,
+              longitude: location.coords.longitude,
             }}
           >
             <View style={styles.markerContainer}>
@@ -48,8 +52,6 @@ const MapaLoc = ({ route }) => {
     </>
   );
 }
-
-export default MapaLoc;
 
 const styles = StyleSheet.create({
   container: {
@@ -70,3 +72,5 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
 });
+
+export default MapaLoc;

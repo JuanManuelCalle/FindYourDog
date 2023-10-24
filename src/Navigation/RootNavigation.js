@@ -1,3 +1,8 @@
+
+/**
+ * Archivo para crear rutas principales en donde retornan su respectiva Screen
+ */
+
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'

@@ -4,6 +4,11 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { colors } from '../../theme/colors'
 import { FontAwesome } from '@expo/vector-icons'; 
 
+/**
+ * Componente HeaderComponente
+ * 
+ * Este componente representa el encabezado de la aplicación. Muestra un título personalizado por vista y un ícono.
+ */
 const HeaderComponente = ({title}) => {
   return (
     <View style={styles.container}>
@@ -14,11 +19,12 @@ const HeaderComponente = ({title}) => {
 
 export default HeaderComponente
 
+// Estilos del componente
 const styles = StyleSheet.create({
     container: {
         height: 85,
         width: "100%",
-        alignItems: "center", //Vertical
+        alignItems: "center", //Centra en vertical
         justifyContent: "center",
         backgroundColor: colors.rose
     },

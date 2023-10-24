@@ -1,3 +1,7 @@
+/**
+ * Archivo para crear rutas de login en donde retornan su respectiva Screen
+ */
+
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "../Screens/Login";
 import Register from "../Screens/Register";

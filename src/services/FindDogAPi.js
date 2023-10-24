@@ -1,27 +1,33 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { base_url } from '../firebase/database'
 
+// Crear una API utilizando Redux Toolkit Query
 export const ecApi = createApi({
-    reducerPath: "EcApi",
+    reducerPath: "EcApi", // Nombre del slice en el estado de Redux
     baseQuery: fetchBaseQuery({
-        baseUrl: base_url
+        baseUrl: base_url, // URL base para las solicitudes HTTP
     }),
     endpoints: (builder) => ({
+        // Definición de puntos finales de la API
         getDogs: builder.query({
-            query: () => "dogs.json",
+            // Consulta para obtener datos de las mascotas perdidas
+            query: () => "dogs.json", // URL para la consulta
         }),
         getImage: builder.query({
-            query: () => "image.json"
+            // Consulta para obtener imágenes
+            query: () => "image.json", // URL para la consulta de imágenes
         }),
 
         putImage: builder.mutation({
+            // Mutación para cargar una imagen en la base de datos
             query: (image) => ({
-                url: "image.json",
-                method: "PUT",
-                body: image,
+                url: "image.json", // URL para la mutación
+                method: "PUT", // Método HTTP utilizado (PUT)
+                body: image, // Datos de la imagen a cargar
             })
         })
     })
 })
 
-export const {useGetDogsQuery, usePutImageMutation, useGetImageQuery} = ecApi
+// Exportar funciones generadas para usar los puntos finales de la API
+export const { useGetDogsQuery, usePutImageMutation, useGetImageQuery } = ecApi;
