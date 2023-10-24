@@ -10,14 +10,6 @@ export const ecApi = createApi({
         getDogs: builder.query({
             query: () => "dogs.json",
         }),
-        PostDog: builder.mutation({
-            query: (form) => ({
-                url: "dogs.json",
-                method: "POST",
-                body: form
-            })
-        }),
-
         getImage: builder.query({
             query: () => "image.json"
         }),
@@ -32,4 +24,4 @@ export const ecApi = createApi({
     })
 })
 
-export const {useGetDogsQuery, usePostDogMutation, usePutImageMutation, useGetImageQuery} = ecApi
+export const {useGetDogsQuery, usePutImageMutation, useGetImageQuery} = ecApi

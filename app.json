@@ -21,7 +21,14 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.FOREGROUND_SERVICE"
+      ],
+      "package": "com.juan_manuel.FindDog"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -39,6 +46,11 @@
           "locationAlwaysAndWhenInUsePermission": "Permitir a coder acceder a tu ubicación"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "ff53001b-7648-4214-9517-d68d2ea8dcb0"
+      }
+    }
   }
 }

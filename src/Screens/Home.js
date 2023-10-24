@@ -8,22 +8,34 @@ import HeaderComponente from '../components/HeaderComponent/HeaderComponente';
 import { useNavigation } from '@react-navigation/native';
 import { colors } from '../theme/colors';
 import { useGetDogsQuery } from '../services/FindDogAPi';
+import { useEffect } from 'react';
+import Spinner from '../components/Spinner/Spinner';
 
 const Home = () => {
   const navigation = useNavigation();
 
   const [searchQuery, setSearchQueryLocal] = useState('');
 
-  // Obtener datos de Firebase usando useGetDogsQuery
-  const { data, isLoading, isError } = useGetDogsQuery();
+  const { data, isLoading, isError, refetch } = useGetDogsQuery();
 
   const onChangeSearch = (query) => {
     setSearchQueryLocal(query);
   };
-  
-  const filteredDogs = data ? data.filter((dog) =>
+
+
+  useEffect(() => {
+    refetch();
+  })
+
+  let filteredDogs;
+
+  if(isLoading){
+    return <Spinner />
+  }else{
+   filteredDogs = data ? data.filter((dog) =>
         dog.name.toLowerCase().includes(searchQuery.toLowerCase())
       ) : [];
+  }
 
   return (
     <>
@@ -53,7 +65,7 @@ const styles = StyleSheet.create({
   searchbar: {
     marginBottom: 16,
     backgroundColor: colors.white,
-  },
+  }
 });
 
 export default Home;

@@ -60,7 +60,6 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   markerContainer: {
-    backgroundColor: 'blue',
     padding: 10,
     borderRadius: 50, // Cambiado a 50 para hacerlo más pequeño
     overflow: 'hidden',
