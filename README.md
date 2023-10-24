@@ -1,4 +1,4 @@
-# VoidStore - Tu eCommerce en línea
+# FindYourDog - Tu app de confianza
 
 ![VoidStore Logo](https://raw.githubusercontent.com/JuanManuelCalle/FindYourDog/main/src/global/img/FinDog.jpg)
 
